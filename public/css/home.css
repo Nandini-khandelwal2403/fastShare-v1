@@ -1,0 +1,62 @@
+body {
+    background-color: #06283D;
+}
+
+.container {
+    height: 80vh;
+    position: relative;
+    /* border: 3px solid green; */
+}
+
+.linear-wipe {
+    text-align: center;
+    background: linear-gradient(to right, #9CECFB 20%, #4787ef 40%, #4787ef 60%, #9CECFB 80%);
+    background-size: 200% auto;
+    color: #000;
+    background-clip: text;
+    text-fill-color: transparent;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    -webkit-animation: shine 3s linear infinite;
+    animation: shine 3s linear infinite;
+    font-size: 5rem;
+    margin-top: 2rem;
+}
+
+@-webkit-keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+@keyframes shine {
+    to {
+        background-position: 200% center;
+    }
+}
+
+
+.create-btn svg {
+    margin-top: -3px;
+}
+
+.btn-grp-div {
+    width: 45%;
+    /* margin: auto; */
+    margin: auto;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    -ms-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+}
+
+.or {
+    color: aliceblue;
+    margin: 0 1rem;
+}
+
+.form-group {
+    margin-right: 0.7rem;
+    
+}
