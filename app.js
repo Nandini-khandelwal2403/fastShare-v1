@@ -19,7 +19,7 @@ io.sockets.on('connection', socket => {
         console.log(room);
         const roomSize = io.sockets.adapter.rooms.get(room).size;
         socket.emit("updateRoom", username, roomSize, socket.id);
-        socket.emit("socketID", socket.id, roomPeers[room]);
+        // socket.emit("socketID", socket.id, roomPeers[room]);
     })
 
     socket.on("message", (message, room) => {

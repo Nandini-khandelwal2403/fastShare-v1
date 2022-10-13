@@ -114,8 +114,10 @@ socket.on("message", (message, roomid) => {
             console.log('pc.remoteDescription.type', pc[roomid].remoteDescription.type);
             console.log('Answering offer');
             pc[roomid].createAnswer((desc) => localDescCreated(roomid, desc), error => console.error(error));
+            console.log("Answer created");
         }, error => console.error(error));
     } else if (message.type === "answer") {
+        console.log("Answer came");
         pc[roomid].setRemoteDescription(new RTCSessionDescription(message));
 
     } else if (message.candidate) {
