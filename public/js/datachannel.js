@@ -2,7 +2,7 @@ const socket = io.connect();
 let pc = {};
 let dataChannel = {};
 
-window.onload = function(){
+window.onload = function() {
     const roomID = location.pathname.substring(location.pathname.length - 4);
     console.log(roomID);
     window.roomID = roomID;
@@ -17,7 +17,7 @@ window.onload = function(){
 let peers = {};
 socket.on("updateRoom", (newPeer, roomSize, newPeerID) => {
     window.roomSize = roomSize;
-    console.log("Room Created");
+    console.log("Room Created of size", roomSize);
     const isOfferer = roomSize > 1;
     console.log('trigger');
     startWebRTC(isOfferer, roomID);
@@ -31,23 +31,23 @@ socket.on("updateRoom", (newPeer, roomSize, newPeerID) => {
 
 const configuration = {
     iceServers: [{
-        url: 'stun:stun.l.google.com:19302'
-    },
-    {
-        urls: "turn:openrelay.metered.ca:80",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-    },
-    {
-        urls: "turn:openrelay.metered.ca:443",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-    },
-    {
-        urls: "turn:openrelay.metered.ca:443?transport=tcp",
-        username: "openrelayproject",
-        credential: "openrelayproject"
-    }
+            url: 'stun:stun.l.google.com:19302'
+        },
+        {
+            urls: "turn:openrelay.metered.ca:80",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        },
+        {
+            urls: "turn:openrelay.metered.ca:443?transport=tcp",
+            username: "openrelayproject",
+            credential: "openrelayproject"
+        }
     ],
     // iceCandidatePoolSize: 2
 };
@@ -69,10 +69,10 @@ function startWebRTC(isOfferer, roomid) { //2nd person is offerer
         }
     };
 
-    pc[roomid].oniceconnectionstatechange = function (event) {
+    pc[roomid].oniceconnectionstatechange = function(event) {
         if (pc[roomid].iceConnectionState === "failed" ||
             pc[roomid].iceConnectionState === "disconnected" ||
-            pc[roomid].iceConnectionState === "closed") { } else if (pc[roomid].iceConnectionState === "connected") { }
+            pc[roomid].iceConnectionState === "closed") {} else if (pc[roomid].iceConnectionState === "connected") {}
     };
 
 
@@ -107,7 +107,9 @@ function localDescCreated(roomid, desc) {
 
 
 socket.on("message", (message, roomid) => {
-    console.log(message);
+    if (message.type === "offer" || message.type === "answer" || message.candidate) {
+        console.log('Client receiving message: ', message.type, roomid);
+    }
     if (message.type === "offer") {
         // This is called after receiving an offer or answer from another peer
         pc[roomid].setRemoteDescription(new RTCSessionDescription(message), () => {
@@ -124,12 +126,12 @@ socket.on("message", (message, roomid) => {
         // Add the new ICE candidate to our connections remote description
         console.log('candidate');
         pc[roomid].addIceCandidate(new RTCIceCandidate(message));
-    } 
+    }
 })
 
 function sendMessage(message, room) {
-    // console.log('Client sending message: ', message, room);
+    if (message.type === "offer" || message.type === "answer" || message.candidate) {
+        console.log('Client sending message: ', message.type, room);
+    }
     socket.emit('message', message, room);
 }
-
-

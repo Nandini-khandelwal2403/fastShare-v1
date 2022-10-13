@@ -9,13 +9,14 @@ const io = socketio(server);
 app.use(express.static(__dirname + '/public'));
 
 const PORT = process.env.PORT || 3001;
-const {newUser} = require('./helper/helperfun');
+const { newUser } = require('./helper/helperfun');
 
 let roomPeers = {};
 io.sockets.on('connection', socket => {
     socket.on('joinroom', (username, room) => {
-        const user = newUser(socket.id, username, room);
-        socket.join(user.room);
+        // const user = newUser(socket.id, username, room);
+        // console.log(user);
+        socket.join(room);
         console.log(room);
         const roomSize = io.sockets.adapter.rooms.get(room).size;
         socket.emit("updateRoom", username, roomSize, socket.id);
@@ -23,7 +24,10 @@ io.sockets.on('connection', socket => {
     })
 
     socket.on("message", (message, room) => {
-        socket.broadcast.to(room).emit("message", message, room);
+        if (message.type === "offer" || message.type === "answer" || message.candidate) {
+            console.log('Message: ', message.type, room);
+        }
+        socket.to(room).emit("message", message, room);
     })
 })
 
