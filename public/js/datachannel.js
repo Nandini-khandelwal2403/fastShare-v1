@@ -1,4 +1,6 @@
 const socket = io.connect();
+let pc = {};
+let dataChannel = {};
 
 window.onload = function(){
     const roomID = location.pathname.substring(location.pathname.length - 4);
