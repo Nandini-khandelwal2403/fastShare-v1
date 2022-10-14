@@ -14,13 +14,18 @@ const { newUser } = require('./helper/helperfun');
 let roomPeers = {};
 io.sockets.on('connection', socket => {
     socket.on('joinroom', (username, room) => {
-        // const user = newUser(socket.id, username, room);
-        // console.log(user);
+        const user = newUser(socket.id, username, room);
+        console.log(user);
         socket.join(room);
         console.log(room);
         const roomSize = io.sockets.adapter.rooms.get(room).size;
-        socket.emit("updateRoom", username, roomSize, socket.id);
-        // socket.emit("socketID", socket.id, roomPeers[room]);
+        io.to(user.room).emit("updateRoom", username, roomSize, socket.id);
+
+        if (!roomPeers[room]) {
+            roomPeers[room] = {};
+        }
+        roomPeers[room][username] = socket.id;
+        socket.emit("socketID", socket.id, roomPeers[room]);
     })
 
     socket.on("message", (message, room) => {

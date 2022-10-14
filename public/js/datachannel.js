@@ -15,18 +15,32 @@ window.onload = function() {
     console.log("Generate Room");
 }
 
+let localID;
+socket.on("socketID", (socketid, peersObj) => {
+    localID = socketid;
+    peers = peersObj;
+    Object.keys(peers).forEach(peername => {
+        if (peername !== username) {
+            chart.series[0].addPoint([username, peername], true);
+        }
+    });
+})
+
 let peers = {};
 socket.on("updateRoom", (newPeer, roomSize, newPeerID) => {
     window.roomSize = roomSize;
     console.log("Room Created of size", roomSize);
     const isOfferer = roomSize > 1;
     console.log('trigger');
-    startWebRTC(isOfferer, roomID);
-    console.log("data channel");
-    // if (newPeer !== username) {
-    //     peers[newPeer] = newPeerID;
-    //     chart.series[0].addPoint([username, newPeer], true);
-    // }
+
+    if (newPeer !== username) {
+        peers[newPeer] = newPeerID;
+        chart.series[0].addPoint([username, newPeer], true);
+    } else {
+        startWebRTC(isOfferer, roomID);
+        console.log("data channel");
+        chart.series[0].addPoint([username, username], true);
+    }
 
 })
 
@@ -264,3 +278,46 @@ function sendMessage(message, room) {
     }
     socket.emit('message', message, room);
 }
+
+let chart = new Highcharts.chart('peers', {
+    chart: {
+        type: 'networkgraph',
+        // color: 'rgba(255, 255, 255, 0)'
+    },
+    title: {
+        text: 'Peer graph',
+        color: '#ccc'
+    },
+    plotOptions: {
+        networkgraph: {
+            layoutAlgorithm: {
+                enableSimulation: true
+            }
+        }
+    },
+
+    series: [{
+        dataLabels: {
+            enabled: true,
+            // linkTextPath: {
+            //     attributes: {
+            //         dy: 12
+            //     }
+            // },
+            linkFormat: '',
+            textPath: {
+                enabled: true,
+                attributes: {
+                    dy: 14,
+                    startOffset: '45%',
+                    textLength: 80
+                }
+            },
+            format: '{point.name}'
+        },
+        marker: {
+            radius: 35
+        },
+        data: []
+    }]
+});
