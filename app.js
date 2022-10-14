@@ -24,9 +24,9 @@ io.sockets.on('connection', socket => {
     })
 
     socket.on("message", (message, room) => {
-        if (message.type === "offer" || message.type === "answer" || message.candidate) {
-            console.log('Message: ', message.type, room);
-        }
+        // if (message.type === "offer" || message.type === "answer" || message.candidate) {
+        console.log('Message: ', message.type, room);
+        // }
         socket.to(room).emit("message", message, room);
     })
 })
