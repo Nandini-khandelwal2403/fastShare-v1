@@ -1,5 +1,10 @@
 function copy() {
     const link = location.href;
-    navigator.clipboard.writeText(link);
+    const el = document.createElement('textarea');
+    el.value = link;
+    document.body.appendChild(el);
+    el.select();
+    document.execCommand('copy');
+    document.body.removeChild(el);
     alert("Text Copied");
 }
