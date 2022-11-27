@@ -26,6 +26,8 @@ socket.on("socketID", (socketid, peersObj) => {
     });
 })
 
+
+// Creating a node
 let peers = {};
 socket.on("updateRoom", (newPeer, roomSize, newPeerID) => {
     window.roomSize = roomSize;
@@ -148,6 +150,7 @@ async function setupDataChannel(roomid) {
             clone.querySelector('.progress-bar').style.width = '0%'
             document.querySelector('.files-list').appendChild(clone.querySelector('.card'));
         }
+        // progress of sharing
         receiveBuffer[fileObj.uuid].push(ab);
         receivedSize[fileObj.uuid].value += ab.byteLength;
         document.querySelector("#progress-" + fileObj.uuid).style.width = receivedSize[fileObj.uuid].value / receivedSize[fileObj.uuid].max * 100 + "%";
