@@ -1,6 +1,5 @@
 function copy() {
-    let copyText = window.location.href;
-    navigator.clipboard.writeText(copyText);
-    alert("URL Copied");
+    const link = location.href;
+    navigator.clipboard.writeText(link);
+    alert("Text Copied");
 }
-
